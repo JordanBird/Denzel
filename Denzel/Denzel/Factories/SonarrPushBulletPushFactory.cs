@@ -1,4 +1,5 @@
-﻿using Denzel.NotificationServices.PushBullet;
+﻿using Denzel.Logger;
+using Denzel.NotificationServices.PushBullet;
 using Denzel.Sonarr;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,13 @@ namespace Denzel.Factories
         {
             var episode = (EventEpisodeGrab)eventEpisode;
             var quality = new QualityTypes().SonarrQualityTypes.FirstOrDefault(x => episode.Release_Title.Contains(x));
+
+            if (String.IsNullOrEmpty(quality))
+            {
+                quality = "Unrecognised";
+            }
+
+            new Slogger().AddToLog(new LoggerFactory().BuildLogForInfo($"Quality parsed was: {quality}.")); //Debug possible sending bug.
 
             return new PushBulletPush()
             {

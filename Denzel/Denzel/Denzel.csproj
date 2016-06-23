@@ -44,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Factories\SonarrPushBulletPushFactory.cs" />
+    <Compile Include="Logger\Log.cs" />
+    <Compile Include="Logger\Slogger.cs" />
+    <Compile Include="Logger\LoggerFactory.cs" />
     <Compile Include="NotificationServices\PushBullet\PushBullet.cs" />
     <Compile Include="NotificationServices\PushBullet\PushBulletPush.cs" />
     <Compile Include="Program.cs" />
