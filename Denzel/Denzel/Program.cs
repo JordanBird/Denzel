@@ -1,4 +1,5 @@
-﻿using Denzel.Factories;
+﻿using Denzel.Classes;
+using Denzel.Factories;
 using Denzel.Logger;
 using Denzel.NotificationServices.PushBullet;
 using Denzel.Sonarr;
@@ -14,16 +15,22 @@ namespace Denzel
     {
         static void Main(string[] args)
         {
+            DenzelArguments denzelArgs = new DenzelArguments();
+            if (args.Length > 0)
+            {
+                denzelArgs = new DenzelArgumentsBuilder().BuildDenzelArgumentsFromArgsString(args[0]);
+            }
+
             var logger = new Slogger();
             var loggerFactory = new LoggerFactory();
 
             logger.AddToLog(loggerFactory.BuildLogForStartup());
-            RunDenzel(args, logger, loggerFactory);
+            RunDenzel(denzelArgs, logger, loggerFactory);
 
             logger.AddToLog(loggerFactory.BuildLogForExit());
         }
 
-        static void RunDenzel(string[] args, Slogger logger, LoggerFactory loggerFactory)
+        static void RunDenzel(DenzelArguments args, Slogger logger, LoggerFactory loggerFactory)
         {
             var eventEpisode = new SonarrEnvironmentHelper().BuildBaseEventEpisodeFromEnvironment();
 
@@ -36,7 +43,7 @@ namespace Denzel
             logger.AddToLog(loggerFactory.BuildLogForInfo("Building Push."));
             var pushBulletPush = new SonarrPushBulletPushFactory().BuildPushBulletPushForEventEpisode(eventEpisode);
             logger.AddToLog(loggerFactory.BuildLogForInfo("Sending Push."));
-            new PushBullet(args[0]).Send(pushBulletPush);
+            new PushBullet(args.AccessToken).Send(pushBulletPush);
             logger.AddToLog(loggerFactory.BuildLogForInfo("Sent Push."));
         }
     }
